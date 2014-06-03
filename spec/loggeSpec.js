@@ -44,5 +44,18 @@ describe('logge', function() {
       expect(log).toEqual('');
     }));
   });
+
+  describe('when level is set', function() {
+    beforeEach(module(function($provide, $loggeProvider) {
+      $provide.value('$window', {console: $console});
+      $loggeProvider.level('error');
+    }));
+
+    it('calls noop of equal or greater level', inject(function($logge) {
+      $logge.info('info');
+      $logge.error('error');
+      expect(log).toEqual('error;');
+    }));
+  });
 });
 
