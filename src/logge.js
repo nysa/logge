@@ -6,17 +6,31 @@
     provider('$logge', $LoggeProvider);
 
   function $LoggeProvider() {
+    var level = 0;
+
+    /**
+     * Sets the log level.
+     *
+     * @param {string|number} logLevel
+     */
+    this.level = function(logLevel) {
+      level = logLevel;
+    };
+
     this.$get = ['$window', function($window) {
-      return new Logge($window);
+      return new Logge({
+        console: $window.console,
+        level: level
+      });
     }];
   }
 
   /**
    * Logge logger.
    *
-   * @param {object} $window
+   * @param {object} config
    */
-  function Logge($window) {
+  function Logge(config) {
     var LEVELS = {
       debug: 0,
       log: 1,
@@ -24,7 +38,10 @@
       warn: 3,
       error: 4
     };
-    var _console = $window.console;
+    var _console = config.console;
+    var _level = typeof config.level === 'string' ?
+      LEVELS[config.level] :
+      config.level;
 
     /**
      * Factory for generating log methods. Preserves originating source in
@@ -42,6 +59,7 @@
       var fn = function() {};
 
       if (!hasConsole) return fn;
+      if (LEVELS[method] < _level) return fn; // Log level set to ignore
 
       if (hasBind) {
         // Bind to preserve originating source in browser console
