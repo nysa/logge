@@ -6,7 +6,7 @@ In a browser console, Logge preserves the call path and stack trace of where a l
 
 ## Usage
 
-```
+```javascript
 angular.module('myApp', ['logge']).
 
   config(['$loggeProvider', function($loggeProvider) {
