@@ -8,6 +8,11 @@ In a browser console, Logge preserves the call path and stack trace of where a l
 
 ```
 angular.module('myApp', ['logge']).
+
+  config(['$loggeProvider', function($loggeProvider) {
+    $loggeProvider.level('info');
+  }]).
+
   run(['$logge', function($log) {
     // Available methods: debug, log, info, warn, error
     $log.info('Running...');
